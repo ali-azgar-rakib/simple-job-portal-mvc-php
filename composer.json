@@ -1,0 +1,16 @@
+{
+  "name":"rakib/jobsporter",
+  "description": "A simple MVC patterns job project",
+  "authors":[
+    {
+      "name":"Rakib",
+      "email":"aliazgarrakib@gmail.com"
+    }
+  ],
+  "autoload":{
+    "psr-4":{
+      "Framework\\":"Framework/",
+      "App\\Controllers\\": "App/controllers/"
+    }
+  }
+}

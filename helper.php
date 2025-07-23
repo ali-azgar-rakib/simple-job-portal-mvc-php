@@ -1,17 +1,18 @@
 <?php
 
 /**
-*
-* get the base path
-*
-* @param string $path
-* @return string
-*
-*
-* */
+ *
+ * get the base path
+ *
+ * @param string $path
+ * @return string
+ *
+ *
+ * */
 
-  function basePath($path){
-  return __DIR__.'/'.$path;
+function basePath($path)
+{
+  return __DIR__ . '/' . $path;
 }
 
 
@@ -19,16 +20,19 @@
  * Loadview file
  *
  *  @param string $name
+ *  @param array $data
  *  @return void
  *
  * */
 
-function loadView($name){
+function loadView($name, $data = [])
+{
 
-  $viewPath = basePath("views/{$name}.php");
-  if(file_exists($viewPath)){
+  $viewPath = basePath("App/views/{$name}.view.php");
+  if (file_exists($viewPath)) {
+    extract($data);
     require $viewPath;
-  }else{
+  } else {
     echo "Not found path: $viewPath";
   }
 }
@@ -41,12 +45,13 @@ function loadView($name){
  * */
 
 
-function loadPartial($name){
-  $partialPath = basePath("views/partials/{$name}.php");
+function loadPartial($name)
+{
+  $partialPath = basePath("App/views/partials/{$name}.php");
 
-  if(file_exists($partialPath)){
+  if (file_exists($partialPath)) {
     require $partialPath;
-  }else{
+  } else {
     echo "Not found path: $partialPath";
   }
 }
@@ -65,7 +70,8 @@ function loadPartial($name){
  * */
 
 
-function inspect($value){
+function inspect($value)
+{
 
   echo "<pre>";
   var_dump($value);
@@ -85,9 +91,23 @@ function inspect($value){
  * */
 
 
-function inspectAndDie($value){
+function inspectAndDie($value)
+{
 
   echo "<pre>";
   die(var_dump($value));
   echo "</pre>";
+}
+
+/**
+ *
+ * Format salary
+ *
+ * @param string $salary
+ * @return string
+ * */
+
+function formatSalary($salary)
+{
+  return "$" . number_format(floatval($salary));
 }

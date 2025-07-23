@@ -1,0 +1,10 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [NC,L,QSA]
+
+# Skip phpmyadmin requests
+RewriteCond %{REQUEST_URI} ^/phpmyadmin [NC]
+RewriteRule ^ - [L]
+
