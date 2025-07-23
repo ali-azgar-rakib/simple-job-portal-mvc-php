@@ -100,6 +100,10 @@ class Router
 
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
+    if ($requestMethod === 'POST' && isset($_POST['_method'])) {
+      $requestMethod = strtoupper($_POST['_method']);
+    }
+
     $uriSegments = explode('/', trim($uri, '/'));
     foreach ($this->routes as $route) {
       $routeSegments = explode('/', trim($route['uri'], '/'));
