@@ -167,8 +167,20 @@ class ListingController
    * @return void
    *
    * */
-  public function update()
+  public function update($params)
   {
+
+    if (!ctype_digit($params['id'])) return ErrorController::notFound();
+
+    $id = $params['id'] ?? '';
+    $param = [
+      'id' => $id
+    ];
+    $sql = "SELECT * FROM listings WHERE id = :id";
+    $data = $this->db->query($sql, $param);
+    $listing = $data->fetch();
+
+    if (!$listing) return ErrorController::notFound();
     $authorizeField = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email', 'tags'];
     $newListing = array_intersect_key($_POST, array_flip($authorizeField));
     $newListing['user_id'] = 1;
@@ -187,18 +199,17 @@ class ListingController
         'data' => (object) $newListing
       ]);
     } else {
-      $keys = [];
       $values = [];
       foreach ($newListing as $key => $value) {
-        $keys[] = $key;
-        $values[] = ":" . $key;
+        $values[] = "{$key} = :{$key}";
       }
 
-      $keyStr = implode(", ", $keys);
+      $newListing["id"] = $id;
       $valueStr = implode(", ", $values);
-      $sql = "INSERT INTO listings ({$keyStr}) VALUES ({$valueStr})";
-      $this->db->query($sql, $newListing);
-      redirect("/listings");
+      $updateSql = "UPDATE listings SET {$valueStr} WHERE id = :id";
+      $this->db->query($updateSql, $newListing);
+      $_SESSION['success_message'] = "Update successfully!";
+      redirect("/listings/{$id}");
     }
   }
 }

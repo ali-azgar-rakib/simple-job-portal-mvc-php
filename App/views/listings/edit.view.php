@@ -12,7 +12,7 @@ loadPartial("topbanner");
         <div class="message bg-green-100 p-3 my-3">
           This is a success message.
         </div> -->
-    <form method="POST" action="/listings">
+    <form method="POST" action="/listings/<?= $data->id ?>">
       <h2 class="text-2xl font-bold mb-6 text-center text-gray-500">
         Job Info
       </h2>
@@ -22,7 +22,7 @@ loadPartial("topbanner");
         <?php endforeach; ?>
       <?php endif; ?>
 
-
+      <input type="hidden" name="_method" value="PUT" />
       <div class="mb-4">
         <input
           type="text"
@@ -72,7 +72,7 @@ loadPartial("topbanner");
           type="text"
           name="tags"
           placeholder="Tags"
-          class="w-full px-4 py-2 border rounded focus:outline-none" value="<?= $data->tags?? '' ?>" />
+          class="w-full px-4 py-2 border rounded focus:outline-none" value="<?= $data->tags ?? '' ?>" />
       </div>
       <div class="mb-4">
         <input
