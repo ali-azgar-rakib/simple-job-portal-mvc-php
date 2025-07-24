@@ -158,6 +158,11 @@ class ListingController
     $data = $this->db->query($sql, $param);
     $listing = $data->fetch();
 
+    if (! Authorization::isOwner($listing->user_id)) {
+      ErrorController::notAuthorize();
+      exit;
+    }
+
     if (!$listing) return ErrorController::notFound();
 
 
@@ -185,6 +190,12 @@ class ListingController
     $sql = "SELECT * FROM listings WHERE id = :id";
     $data = $this->db->query($sql, $param);
     $listing = $data->fetch();
+
+
+    if (! Authorization::isOwner($listing->user_id)) {
+      ErrorController::notAuthorize();
+      exit;
+    }
 
     if (!$listing) return ErrorController::notFound();
     $authorizeField = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email', 'tags'];
@@ -217,5 +228,33 @@ class ListingController
       Session::setFlushMessage('success_message', 'Update successfully');
       redirect("/listings/{$id}");
     }
+  }
+
+  /**
+   *
+   * Search by keywords/location
+   *
+   * @return void
+   *
+   * */
+
+
+  public function search()
+  {
+    $keywords = isset($_GET['keywords']) ? $_GET['keywords'] : "";
+    $location = isset($_GET['location']) ? $_GET['location'] : "";
+
+    $sql = "SELECT * FROM listings WHERE (title LIKE :keywords OR description LIKE :keywords OR tags LIKE :keywords OR company LIKE :keywords) AND (city LIKE :location OR state LIKE :location)";
+    $params = [
+      'keywords' => "%{$keywords}%",
+      'location' => "%{$location}%"
+    ];
+    $listings = $this->db->query($sql, $params)->fetchAll();
+
+    loadView('listings/index', [
+      'listings' => $listings,
+      'keywords' => $keywords,
+      'location' => $location
+    ]);
   }
 }
