@@ -19,7 +19,7 @@ It includes essential features like **CRUD operations**, **authentication/author
 - 🧹 Clean URLs using `.htaccess`
 
 ---
-
+```text
 ## 📁 Project Structure
 
 Root
@@ -28,7 +28,7 @@ Root
 ├── Framework/ # Reusable components: router, session, validation, middleware
 ├── config/ # Configuration files (e.g., db.php)
 
-
+```
 
 ---
 
@@ -43,7 +43,7 @@ Root
 
 3. Set the DocumentRoot of your server to the /public folder.
 
-4. Import the SQL file (if available) into your database.
+4. Import the SQL file into your database.
 
 5. Update your database credentials in config/db.php.
 
