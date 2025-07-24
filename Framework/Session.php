@@ -81,4 +81,32 @@ class Session
     session_unset();
     session_destroy();
   }
+  /**
+   *
+   * set flash message
+   * @param string $key
+   * @param string $value
+   * @return void
+   * */
+
+  public static function setFlushMessage($key, $value)
+  {
+    self::set("flush_" . $key, $value);
+  }
+
+
+  /**
+   *
+   * get flush message
+   * @param string $key  
+   * @return mixed 
+   *
+   * */
+
+  public static function getFlushMessage($key)
+  {
+    $message = self::get("flush_" . $key);
+    self::clear("flush_" . $key);
+    return $message;
+  }
 }

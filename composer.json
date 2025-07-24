@@ -9,6 +9,7 @@
   ],
   "autoload":{
     "psr-4":{
+      "Framework\\Middleware\\":"Framework/middleware/",
       "Framework\\":"Framework/",
       "App\\Controllers\\": "App/controllers/"
     }

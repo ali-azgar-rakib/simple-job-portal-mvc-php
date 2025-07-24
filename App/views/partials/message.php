@@ -1,6 +1,10 @@
-<?php if (isset($_SESSION['success_message'])): ?>
+<?php
+
+use Framework\Session; ?>
+<?php $message = Session::getFlushMessage('success_message');  ?>
+<?php if ($message !== null): ?>
   <div class="message bg-green-100 p-3 my-3">
-    <?= $_SESSION['success_message'] ?>
+    <?= $message ?>
+    <?php $message = null; ?>
   </div>
-  <?php unset($_SESSION['success_message']); ?>
 <?php endif; ?>

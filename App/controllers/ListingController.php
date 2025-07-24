@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use Framework\Database;
 use App\Controllers\ErrorController;
+use Framework\Authorization;
+use Framework\Session;
 use Framework\Validation;
 
 class ListingController
@@ -70,7 +72,7 @@ class ListingController
   {
     $authorizeField = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email', 'tags'];
     $newListing = array_intersect_key($_POST, array_flip($authorizeField));
-    $newListing['user_id'] = 1;
+    $newListing['user_id'] = Session::get('user')['user_id'];
     $newListing = array_map('sanitize', $newListing);
     $requiredField = ['title', 'description', 'salary', 'requirements', 'company', 'city', 'phone', 'email'];
     $errors = [];
@@ -97,6 +99,7 @@ class ListingController
       $valueStr = implode(", ", $values);
       $sql = "INSERT INTO listings ({$keyStr}) VALUES ({$valueStr})";
       $this->db->query($sql, $newListing);
+      Session::setFlushMessage('success_message', 'Added successfully!');
       redirect("/listings");
     }
   }
@@ -124,10 +127,13 @@ class ListingController
     if (!$listing) {
       ErrorController::notFound("Listing not found");
     }
-
+    if (! Authorization::isOwner($listing->user_id)) {
+      ErrorController::notAuthorize();
+      exit;
+    }
     $deleteSql = "DELETE FROM listings WHERE id=:id";
     $this->db->query($deleteSql, $params);
-    $_SESSION['success_message'] = "Deleted successfully!";
+    Session::setFlushMessage('success_message', 'Deleted successfully!');
     redirect("/listings");
   }
 
@@ -183,7 +189,7 @@ class ListingController
     if (!$listing) return ErrorController::notFound();
     $authorizeField = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email', 'tags'];
     $newListing = array_intersect_key($_POST, array_flip($authorizeField));
-    $newListing['user_id'] = 1;
+    $newListing['user_id'] = Session::get('user')['user_id'];
     $newListing = array_map('sanitize', $newListing);
     $requiredField = ['title', 'description', 'salary', 'requirements', 'company', 'city', 'phone', 'email'];
     $errors = [];
@@ -208,7 +214,7 @@ class ListingController
       $valueStr = implode(", ", $values);
       $updateSql = "UPDATE listings SET {$valueStr} WHERE id = :id";
       $this->db->query($updateSql, $newListing);
-      $_SESSION['success_message'] = "Update successfully!";
+      Session::setFlushMessage('success_message', 'Update successfully');
       redirect("/listings/{$id}");
     }
   }

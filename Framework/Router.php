@@ -3,20 +3,22 @@
 namespace Framework;
 
 use App\Controllers\ErrorController;
+use Framework\Middleware\Authorize;
 
 class Router
 {
   protected $routes = [];
 
 
-  function registerRoute($method, $uri, $action)
+  function registerRoute($method, $uri, $action, $role = [])
   {
     [$controller, $controllerMethod] = explode('@', $action);
     $this->routes[] = [
       'method' => $method,
       'uri' => $uri,
       'controller' => $controller,
-      'controllerMethod' => $controllerMethod
+      'controllerMethod' => $controllerMethod,
+      'role' => $role
     ];
   }
 
@@ -28,13 +30,14 @@ class Router
    *
    * @param string $uri
    * @param string $controller
+   * @param array $role
    * @return void
    *
    * */
 
-  function get($uri, $controller)
+  function get($uri, $controller, $role = [])
   {
-    $this->registerRoute("GET", $uri, $controller);
+    $this->registerRoute("GET", $uri, $controller, $role);
   }
 
 
@@ -44,12 +47,13 @@ class Router
    *
    * @param string $uri
    * @param string $controller
+   * @param array $role
    * @return void
    *
    * */
-  function post($uri, $controller)
+  function post($uri, $controller, $role = [])
   {
-    $this->registerRoute('POST', $uri, $controller);
+    $this->registerRoute('POST', $uri, $controller, $role);
   }
 
 
@@ -59,14 +63,15 @@ class Router
    *
    * @param string $uri
    * @param string $controller
+   * @param array $role
    * @return void
    *
    * */
 
 
-  function put($uri, $controller)
+  function put($uri, $controller, $role = [])
   {
-    $this->registerRoute('PUT', $uri, $controller);
+    $this->registerRoute('PUT', $uri, $controller, $role);
   }
 
 
@@ -76,12 +81,13 @@ class Router
    *
    * @param string $uri
    * @param string $controller
+   * @param array $role
    * @return void
    *
    * */
-  function delete($uri, $controller)
+  function delete($uri, $controller, $role = [])
   {
-    $this->registerRoute('DELETE', $uri, $controller);
+    $this->registerRoute('DELETE', $uri, $controller, $role);
   }
 
 
@@ -126,6 +132,11 @@ class Router
 
 
         if ($match) {
+
+          foreach ($route['role'] as $role) {
+            (new Authorize())->handle($role);
+          }
+
           $controller = "App\\Controllers\\" . $route['controller'];
           $method = $route['controllerMethod'];
 
