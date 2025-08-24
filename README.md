@@ -36,7 +36,7 @@ Root
 
 1. Clone the repository  
    ```bash
-   git clone https://github.com/your-username/simple-job-portal.git
+   git clone https://github.com/your-username/simple-job-portal.git](https://github.com/ali-azgar-rakib/simple-job-portal-mvc-php.git
 
 
 2. Move the project to your web server (e.g., XAMPP, WAMP, Laravel Valet).
